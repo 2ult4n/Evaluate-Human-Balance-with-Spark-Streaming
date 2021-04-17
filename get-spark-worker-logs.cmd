@@ -1,0 +1,1 @@
+docker logs  evaluate-human-balance-with-spark-streaming_spark-worker-1_1 > spark/logs/spark-worker.log 2>&1

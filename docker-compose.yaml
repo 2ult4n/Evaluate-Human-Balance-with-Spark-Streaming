@@ -8,7 +8,7 @@
 # * A Spark master
 # * A Spark worker
 
-version: '3.7'
+version: "3.7"
 
 services:
   redis:
@@ -57,27 +57,27 @@ services:
       KAFKA_BROKER: kafka:19092
     depends_on:
       - "kafka"
-      - "redis"      
+      - "redis"
 
   stedi:
     image: gcr.io/simulation-images/stedi
-    ports: 
-    - "4567:4567"
+    ports:
+      - "4567:4567"
     environment:
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_DB: 0
       KAFKA_BROKER: kafka:19092
-      KAFKA_RISK_TOPIC: your-topic-here
+      KAFKA_RISK_TOPIC: customer-risk
     depends_on:
       - "kafka"
-      - "redis"      
+      - "redis"
 
   connect:
     image: gcr.io/simulation-images/kafka-connect-redis-source
     ports:
-    - "8083:8083"
-    - "5005:5005"
+      - "8083:8083"
+      - "5005:5005"
     environment:
       CONNECT_BOOTSTRAP_SERVERS: "PLAINTEXT://kafka:19092"
       CONNECT_GROUP_ID: "connect"
@@ -98,8 +98,8 @@ services:
       CLASSPATH: "/usr/share/java/kafka-connect-redis-source/*"
 
     depends_on:
-    - "kafka"
-    - "redis"
+      - "kafka"
+      - "redis"
 
   spark:
     image: docker.io/bitnami/spark:3-debian-10
@@ -110,10 +110,10 @@ services:
       - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
       - SPARK_SSL_ENABLED=no
     ports:
-      - '8080:8080'
+      - "8080:8080"
     volumes:
       - ./:/home/workspace/
-      - ./spark/jars:/opt/bitnami/spark/.ivy2 
+      - ./spark/jars:/opt/bitnami/spark/.ivy2
 
   spark-worker-1:
     image: docker.io/bitnami/spark:3-debian-10
@@ -128,10 +128,4 @@ services:
       - SPARK_SSL_ENABLED=no
     volumes:
       - ./:/home/workspace/
-      - ./spark/jars:/opt/bitnami/spark/.ivy2           
-
-
- 
-
-
-
+      - ./spark/jars:/opt/bitnami/spark/.ivy2

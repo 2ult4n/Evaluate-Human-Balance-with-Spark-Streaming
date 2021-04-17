@@ -168,6 +168,7 @@ stediRawStreamingDF = stediRawStreamingDF.selectExpr(
 #
 # storing them in a temporary view called CustomerRisk
 stediRawStreamingDF.withColumn("value", from_json("value", stediCustomerMessageSchema))\
+    .select(col('value.*')) \
     .createOrReplaceTempView("CustomerRisk")
 
 # TO-DO: execute a sql statement against a temporary view, selecting the customer and the score from the temporary view, creating a dataframe called customerRiskStreamingDF
@@ -191,7 +192,7 @@ customerRiskStreamingDF = emailAndBirthYearStreamingDF.join(
 #
 # In this JSON Format {"customer":"Santosh.Fibonnaci@test.com","score":"28.5","email":"Santosh.Fibonnaci@test.com","birthYear":"1963"}
 
-customerRiskStreamingDF.selectExpr("cast(transactionId as string) as key", "to_json(struct(*)) as value") \
+customerRiskStreamingDF.selectExpr("to_json(struct(*)) as value") \
     .writeStream \
     .format("kafka") \
     .option("kafka.bootstrap.servers", "kafka:19092")\
